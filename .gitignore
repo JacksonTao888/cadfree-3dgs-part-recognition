@@ -92,6 +92,13 @@ __pycache__/
 logs/
 *.log
 
+# ---------- Force-allow: figures that ARE part of the release ----------
+# assets/ holds the README and docs figures. It is never denied above as a
+# directory, so these negations are reachable.
+!assets/
+!assets/*.png
+!assets/*.jpg
+
 # ---------- Force-allow: the curated release ----------
 !.gitignore
 !*.md
