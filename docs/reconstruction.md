@@ -1,3 +1,29 @@
+# Reconstruction pipeline
+
+Diagnostics from the reconstruction stages, in pipeline order.
+
+**Camera ring recovered by COLMAP.** The camera centres form a clean planar ring, which is what the
+orbit renderer is fitted to.
+
+![Recovered camera ring](../assets/recon_cam_ring.png)
+
+**Disk mask.** The coloured-grid disk supplies the texture that makes a textureless part trackable, so
+it is kept during pose estimation and only masked away afterwards.
+
+![Disk mask comparison](../assets/recon_disk_mask_compare.jpg)
+
+**Resolution recovery.** At 1920 px the part fills about a tenth of the frame. Re-extracting at native
+4K and cropping to the swept region buys roughly an order of magnitude more pixels on the object at no
+extra capture or pose cost.
+
+![Standard extraction against the 4K crop](../assets/recon_fine_vs_hi.jpg)
+
+**Pruning.** The fitted Gaussians are pruned by a bounding box, never by a colour threshold.
+
+![Before and after pruning](../assets/recon_prune_check.jpg)
+
+---
+
 # Turntable → 3D Gaussian Splatting: Single-Ring Object Reconstruction
 
 Reconstruct a single object captured on a **fixed-camera turntable** (object + a random

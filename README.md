@@ -10,6 +10,8 @@ Splatting twin, render it from 360 viewpoints to manufacture a labelled training
 existed, and meta-train a small head over a frozen DINOv2 backbone that recognizes a real part by its
 most similar reference view. No CAD model, no manual labels, no fine-tuning of the large network.
 
+![Pipeline: turntable video to 3DGS twin to 360 rendered views to a meta-trained head over frozen DINOv2](assets/pipeline.png)
+
 ## The problem
 
 High-mix low-volume production lines have to tell apart many near-identical parts: screw, nut and
@@ -18,6 +20,12 @@ or tooth count. The usual remedy, rendering synthetic training data from CAD, as
 exists, which frequently it does not for legacy, third-party, proprietary or worn parts. We study the
 CAD-unavailable but scan-available setting: the class set is known and fixed, a short turntable video
 of each part can be captured, and few or no labelled real images are available.
+
+![Two near-identical parts coincide from some viewpoints and separate only from others](assets/ambiguity.png)
+
+Two variants can be indistinguishable from one viewpoint and obviously different from another, so a
+recognizer that only ever sees a handful of real photographs has no way to know which viewpoints
+matter.
 
 ## Abstract
 
@@ -66,6 +74,8 @@ look-alike parts, is kept only as an ablation. Training is episodic on the rende
 real labels. At test time everything is frozen and a query is labelled by its single nearest
 reference view.
 
+![Meta-training on rendered views with a 1-NN-consistent loss, and frozen nearest-view inference](assets/recognizer.png)
+
 **Leakage control.** Each part is filmed twice on the same rig. Video A is the only video the twin is
 fitted to; video B supplies every real test image, so no test image ever contributed to a
 reconstruction.
@@ -74,7 +84,10 @@ reconstruction.
 
 The FGIP set is 18 self-3D-printed parts, 2 gears, 8 nuts, 8 screws, near-identical within a family.
 P1 is all 18 classes (chance 5.6%), P2 the 8 screws and P3 the 8 nuts (chance 12.5%). Every number is
-a mean over 300 episodes and 3 seeds.
+a mean over 300 episodes and 3 seeds. Each part below is shown as a real masked crop (top) paired
+with its twin's render at the same viewpoint (bottom).
+
+![The 18-part FGIP set: real crop above, matched 3DGS render below](assets/dataset.png)
 
 **Headline, on the capture rig**
 
@@ -85,6 +98,8 @@ a mean over 300 episodes and 3 seeds.
 | P3 (nuts) | 90.7 | 76.0 |
 | no-meta ProtoNet, P1 | 75.2 | 61.7 |
 | linear probe on the 10 shots, P1 | 79.3 | n/a |
+
+![Accuracy across P1, P2 and P3 against the no-meta baselines](assets/results.png)
 
 **Renders against the video's own frames, matched at 120 views, P1**
 
@@ -101,8 +116,15 @@ the order reverses, and ten labelled shots taken on the rig do not transfer (55.
 between twin SSIM and zero-shot accuracy is about −0.08 and for PSNR about 0.03, neither significant.
 The worst-reconstructed part in the set, `screw h` at 19.9 dB and 0.852 SSIM, is recognized 76.2% of
 the time; `screw b`, reconstructed at 27.6 dB and 0.947 SSIM, collapses to 7.3%. A local,
-relief-sensitive gradient measure does correlate, at about −0.8 over the eight screws. Per-part
-numbers are in [`results/render_quality.csv`](results/render_quality.csv) and the confusion matrices
+relief-sensitive gradient measure does correlate, at about −0.8 over the eight screws.
+
+![Real frame above, twin render below: the silhouette survives, the thread relief does not](assets/fidelity.png)
+
+The twin reproduces the silhouette and the head geometry, but the fine surface relief along the shank
+is smoothed and partly replaced by spurious splat edges. That is the detail separating several of the
+screws, and it is invisible to a global image metric.
+
+Per-part numbers are in [`results/render_quality.csv`](results/render_quality.csv) and the confusion matrices
 behind them in [`results/confusion/`](results/confusion/).
 
 **Cost per part.** Reconstruction 7.0 min on one RTX 5000 Ada (3DGS training 4.8 min, 6.3 GB peak).
