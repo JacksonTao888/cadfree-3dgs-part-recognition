@@ -1,0 +1,117 @@
+# =============================================================================
+# Deny data by default. The source trees are 18.7 GB / 142,665 files; the
+# publishable content is ~1 MB. Add this file BEFORE `git init` / first `git add`.
+# =============================================================================
+
+# ---------- Working / output directories ----------
+work/
+out/
+figures/out/
+
+# ---------- Model weights & checkpoints ----------
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.h5
+sam2_ckpt/
+# SAM2.1 Hiera-Large (856 MB): fetch with scripts/download_sam2.sh
+
+# ---------- 3DGS / point clouds ----------
+*.ply
+**/point_cloud/
+gs/
+gs_obj/
+gs_obj_hi/
+output/
+output_fine/
+output_sugar/
+cfg_args
+
+# ---------- COLMAP ----------
+*.db
+*.db-journal
+colmap/
+colmap_sam/
+sparse/
+*.bin
+project.ini
+
+# ---------- Images, video, renders (141k files, ~14.4 GB) ----------
+*.jpg
+*.jpeg
+*.png
+*.tif
+*.tiff
+*.exr
+*.mp4
+*.mov
+*.MOV
+*.avi
+*.mkv
+
+# ---------- Frame / render / mask trees ----------
+images/
+images_hi/
+_testframes/
+renders_final/
+renders_ext/
+renders_elevsweep/
+novel_renders/
+masks/
+masks_screw*/
+masks_disk*/
+mask_preview/
+disk_preview/
+screw_preview*/
+samples/
+sam2_frames*/
+data_build/
+data_3dgs_*/
+data_rawframes_*/
+data_raw_*/
+data_real_test*/
+data_home_*/
+data_union_*/
+data_offring_test/
+twins/
+timing_C125/
+C1[0-9][0-9]/
+
+# ---------- Caches & scratch ----------
+_featcache/
+*.npz
+__pycache__/
+*.pyc
+*.bak
+*.bak_*
+.ipynb_checkpoints/
+.DS_Store
+.env
+logs/
+*.log
+
+# ---------- Force-allow: the curated release ----------
+!.gitignore
+!*.md
+!*.py
+!*.sh
+!*.yml
+!*.txt
+!requirements.txt
+!LICENSE
+!data_prep/*.csv
+!results/**/*.csv
+!results/**/*.tsv
+!results/**/*.json
+!results/**/*.md
+!results/confusion/*.npy
+!docs/assets/*.jpg
+!docs/assets/*.png
+!docs/assets/*.mp4
+
+# NOTE: git does not descend into an ignored directory, so a `!` rule can never
+# rescue a file inside one. results/ and docs/assets/ are therefore NOT listed
+# in any deny rule above — do not add one. Everything published is COPIED into
+# the repo tree; nothing is published by negation out of a working directory.

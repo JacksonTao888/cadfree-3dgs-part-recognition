@@ -1,0 +1,16 @@
+{
+ "gpu": "NVIDIA RTX 5000 Ada Generation",
+ "backbone_params_M": 86.6,
+ "head_params_K": 525.1,
+ "backbone_GFLOPs_per_image": 46.32,
+ "head_MFLOPs_per_image": 1.049,
+ "latency_ms_batch1": 5.0,
+ "throughput_img_per_s_batch1": 199.9,
+ "peak_mem_MiB_batch1": 351.0,
+ "latency_ms_batch64": 158.38,
+ "throughput_img_per_s_batch64": 404.1,
+ "peak_mem_MiB_batch64": 909.0,
+ "meta_train_2000it_s": 3.6,
+ "meta_train_peak_mem_MiB": 362.0,
+ "nn_query_ms_gallery_6480": 0.025
+}

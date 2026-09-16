@@ -1,0 +1,11 @@
+# Recognizer + figures only. Versions are those used for the paper's runs.
+# The reconstruction half (COLMAP, SAM2, the 3DGS rasterizer) is NOT pip-installable;
+# see docs/environments.md.
+torch==2.7.1            # +cu118 build
+torchvision==0.22.1     # +cu118 build
+numpy==1.26.4
+scipy==1.15.3
+scikit-learn==1.7.2
+matplotlib==3.10.9
+pillow==12.1.1
+open_clip_torch==3.3.0
