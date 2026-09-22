@@ -122,3 +122,7 @@ logs/
 # rescue a file inside one. results/ and docs/assets/ are therefore NOT listed
 # in any deny rule above — do not add one. Everything published is COPIED into
 # the repo tree; nothing is published by negation out of a working directory.
+
+# ---------- CAD reference models (keep) ----------
+!cad/**/*.stl
+!cad/*.jpg
