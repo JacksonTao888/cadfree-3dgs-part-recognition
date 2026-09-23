@@ -126,3 +126,4 @@ logs/
 # ---------- CAD reference models (keep) ----------
 !cad/**/*.stl
 !cad/*.jpg
+!cad/**/*.SLDPRT

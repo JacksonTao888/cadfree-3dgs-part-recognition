@@ -79,3 +79,21 @@ long; measure one and, if that disagrees, rerun `gen_gb_parts.py` with the size 
 - `gen_gb_parts.py` — the generator, one named argument per dimension
 - `verify.py` — compares a generated model's silhouette with the proportions measured from the scans
 - `preview_real_vs_generated.jpg` — each generated part beside a photograph of the real one
+
+## SOLIDWORKS source parts (authoritative)
+
+`solidworks/` holds the 18 parts rebuilt by the author in SOLIDWORKS Toolbox from its GB standard
+library (SOLIDWORKS Design Premium for Education 2026, accessed through the Georgia Tech virtual
+lab). These are the reference models; the STL sets in this folder were reconstructed independently
+from the scans before the Toolbox parts existed, and should be replaced by STL exported from these
+parts.
+
+File names follow the paper's part names. The dataset uses different names for three nuts:
+
+| file | paper | dataset |
+|---|---|---|
+| Nut_f.SLDPRT | nut_f | nut_g |
+| Nut_g.SLDPRT | nut_g | nut_h |
+| Nut_h.SLDPRT | nut_h | nut_i |
+
+All other files match both namings.
