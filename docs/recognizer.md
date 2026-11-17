@@ -218,6 +218,9 @@ Useful flags: `--shots 5`, `--seed 1` (run a few seeds and average — the zero-
 seeds), `--variant resnet18` (weaker backbone, for the ablation), `--source data_rawframes_source`
 (raw-frames source), `--classes-csv subset.csv` (restrict to a subset of classes).
 
+`--save-head FILE` writes the trained head and `--load-head FILE` evaluates a saved head without
+meta-training. `--seed` fixes the episodes and the head's initial weights, so a run can be repeated exactly.
+
 (Optional) no-meta baseline: `~/miniconda3/envs/skill-meta/bin/python run_matrix.py`.
 
 ### Step F — Analysis figures (optional)  [env: skill-meta, needs matplotlib + sklearn]
@@ -230,6 +233,19 @@ seeds), `--variant resnet18` (weaker backbone, for the ablation), `--source data
 `confusion.py` writes 18-way confusion matrices (10-shot & zero-shot) ordered by category; `tsne.py`
 writes a t-SNE of the real-test features before vs after the meta-head. Both save to the `figures/`
 path set near the top of those scripts — change it to your own.
+
+### Step G — Use the trained head  [env: skill-meta]
+
+The heads trained on the 18 FGIP parts are in `weights/`, with the parts' reference views stored as DINOv2
+features, so this step needs neither the data nor the steps above:
+
+```bash
+python recognizer/predict.py examples/*.jpg              # label images
+python recognizer/predict.py --eval data_real_test       # accuracy on a folder laid out as <class>/<images>
+python recognizer/predict.py --refs my_refs photo.jpg    # your own reference images, my_refs/<class>/<images>
+```
+
+`weights/README.md` has the accuracy of each head and the details.
 
 ---
 

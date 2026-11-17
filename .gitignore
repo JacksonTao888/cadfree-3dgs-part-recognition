@@ -127,3 +127,9 @@ logs/
 !cad/**/*.stl
 !cad/*.jpg
 !cad/**/*.SLDPRT
+
+# ---------- Released recognizer (keep) ----------
+# The trained head, the reference set stored as DINOv2 features, and one test crop per part.
+!weights/*.pt
+!weights/*.npz
+!examples/*.jpg

@@ -117,6 +117,8 @@ def main():
     pa.add_argument("--classes-csv", default=f"{ROOT}/clip_to_class.csv", help="restrict to classes in this csv (pilot subset)")
     pa.add_argument("--cap", type=int, default=400, help="max images cached per class dir (0 = no cap)")
     pa.add_argument("--gallery", default="", help="optional dir used as the zero-shot reference gallery instead of --source (meta-training still uses --source)")
+    pa.add_argument("--save-head", default="", help="write the meta-trained head (a state_dict) to this file")
+    pa.add_argument("--load-head", default="", help="skip meta-training and evaluate this saved head instead (e.g. weights/head_fgip18_seed0.pt)")
     args=pa.parse_args(); random.seed(args.seed)
     allcls=sorted(r["class"] for r in csv.DictReader(open(args.classes_csv)))
     if args.variant.startswith("dinov2"):
@@ -130,9 +132,18 @@ def main():
     src={c:feats_for_dir(model,f"{args.source}/{c}",args.variant,cap=cap) for c in allcls}
     real={c:feats_for_dir(model,f"{args.test}/{c}",args.variant,cap=cap) for c in allcls}
     gal={c:feats_for_dir(model,f"{args.gallery}/{c}",args.variant,cap=cap) for c in allcls} if args.gallery else src
+    torch.manual_seed(args.seed)   # the head's initial weights follow --seed too, so a run can be repeated exactly
     head=Head(d=fdim).to(DEV)
-    print(f"meta-training head on SOURCE ({args.meta_iters} iters, {args.meta_nway}-way) ...")
-    meta_train(head, src, allcls, args.meta_iters, args.meta_nway, 5, 10, 1e-3, args.seed, args.cls)
+    if args.load_head:
+        head.load_state_dict(torch.load(args.load_head, map_location=DEV, weights_only=True)); head.eval()
+        print(f"loaded head {args.load_head} (no meta-training)")
+    else:
+        print(f"meta-training head on SOURCE ({args.meta_iters} iters, {args.meta_nway}-way) ...")
+        meta_train(head, src, allcls, args.meta_iters, args.meta_nway, 5, 10, 1e-3, args.seed, args.cls)
+        if args.save_head:
+            os.makedirs(os.path.dirname(os.path.abspath(args.save_head)), exist_ok=True)
+            torch.save({k: v.detach().cpu() for k, v in head.state_dict().items()}, args.save_head)
+            print(f"saved head -> {args.save_head}")
     rng=torch.Generator().manual_seed(args.seed+1)
     protos={"P1_all(18way)":allcls,"P2_screw(8way)":[c for c in allcls if c.startswith("screw")],"P3_nut(8way)":[c for c in allcls if c.startswith("nut")]}
     print(f"\nMETA over DINOv2 | source={os.path.basename(args.source)} gallery={os.path.basename(args.gallery) if args.gallery else os.path.basename(args.source)} test={os.path.basename(args.test)} shots={args.shots}")

@@ -136,6 +136,9 @@ Recognizer inference 5.0 ms per image; meta-training 4 s on cached features.
 reconstruction/   video → focal estimate → SAM2 masks → 3DGS fit → 360-view orbit
 data_prep/        renders and frames → cropped, class-foldered source and test sets
 recognizer/       run_meta.py is the method; the no-meta, linear-probe and backbone baselines
+weights/          the trained head (three seeds) and the 18 parts' reference views as DINOv2 features;
+                  recognizer/predict.py runs them
+examples/         one test crop per part, to try predict.py on
 analysis/         reconstruction fidelity, inference cost, confusion matrices, symmetry index
 figures/          scripts that regenerate the paper's figures
 scripts/          batch drivers for reconstruction and for the experiment matrix
@@ -154,10 +157,24 @@ That covers the recognizer and the figures. The reconstruction half needs COLMAP
 No path is hard-coded: every script reads `CADFREE_ROOT`, `CADFREE_VIDEOS`, `CADFREE_TESTVID`,
 `DTD_DIR` and `CADFREE_FIGOUT`, documented in the same file.
 
+## Trained recognizer
+
+The trained head is in [`weights/`](weights/), together with the reference views of the 18 FGIP parts
+stored as DINOv2 features, so the recognizer runs from a fresh clone with no training and no dataset:
+
+```bash
+python recognizer/predict.py examples/*.jpg
+```
+
+`examples/` holds one test crop per part. The frozen DINOv2 ViT-B/14 backbone is downloaded by
+`torch.hub` on first use. [`weights/README.md`](weights/README.md) lists the files, the accuracy of
+each head, how to check them against the dataset, and how to use your own reference images.
+
 ## What this repository does and does not give you
 
 It gives you the method: the full reconstruction pipeline, the recognizer, the baselines, the analysis
-and figure code, and the small result files behind the paper's tables.
+and figure code, and the small result files behind the paper's tables. It also gives you the trained
+recognizer for the 18 FGIP parts: the meta-trained head and the parts' reference views as features.
 
 It does not give you the data. The FGIP videos, frames, masks and twins are about 19 GB and are not
 published here; the dataset remains available from the corresponding author on reasonable request.

@@ -10,6 +10,10 @@ exact numbers cannot be regenerated from a fresh clone. What you can do is run t
 your own turntable capture, and inspect the small result files under `results/` that the paper's
 tables were read from.
 
+The trained head is published here, in `weights/`. The recognizer therefore runs from a fresh clone
+(`recognizer/predict.py`), and with the data its accuracy can be checked without retraining
+(`recognizer/run_meta.py --load-head`); see `weights/README.md`.
+
 ## Table and figure map
 
 | Paper item | Script | Notes |
@@ -50,6 +54,11 @@ These are stated rather than papered over.
 6. **`results/fidelity_vs_accuracy.json` is partly superseded.** Its stored correlation values predate
    the final runs and do not match the manuscript; use `results/render_quality.csv` joined to
    `results/confusion/` instead.
+7. **The paper's three heads were not kept.** `run_meta.py` did not save the head, and it did not seed
+   the head's initial weights, so `--seed` fixed the episodes but not the result: four runs of the
+   seed-0 command gave 91.95 to 92.83 at 10 shots and 75.44 to 78.25 zero-shot on P1. The script now
+   seeds the initial weights and can save the head. The heads in `weights/` were retrained with the
+   paper's settings and seeds; `weights/README.md` gives their accuracy next to the paper's.
 
 ## Part naming
 

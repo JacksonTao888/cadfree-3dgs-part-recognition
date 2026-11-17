@@ -1,0 +1,365 @@
+{
+ "what": "Meta-trained projection heads of the CAD-free 3DGS part recognizer, for the 18 FGIP parts, with their reference set.",
+ "backbone": {
+  "name": "dinov2_vitb14",
+  "from": "torch.hub, facebookresearch/dinov2",
+  "frozen": true,
+  "input": "Resize(224), CenterCrop(224), ImageNet mean and std",
+  "feature": "x_norm_clstoken, L2-normalised, 768-d"
+ },
+ "head": {
+  "layers": "Linear(768, 512), ReLU, Linear(512, 256); output L2-normalised",
+  "values": 525057,
+  "state_dict": {
+   "logit_scale": [],
+   "net.0.weight": [
+    512,
+    768
+   ],
+   "net.0.bias": [
+    512
+   ],
+   "net.2.weight": [
+    256,
+    512
+   ],
+   "net.2.bias": [
+    256
+   ]
+  },
+  "note": "logit_scale is used by the training loss only"
+ },
+ "training": {
+  "command": "python recognizer/run_meta.py --cls nn --seed SEED --save-head weights/head_fgip18_seedSEED.pt",
+  "source": "data_3dgs_source: 360 rendered views of each of 18 parts (6,480 images); no real image",
+  "loss": "cross-entropy over per-class log-sum-exp of scaled cosine similarities to the support views (1-NN-consistent)",
+  "episodes": 2000,
+  "classes_per_episode": 8,
+  "support_views_per_class": 5,
+  "query_views_per_class": 10,
+  "optimizer": "Adam, learning rate 1e-3",
+  "logit_scale_initial": 10.0,
+  "date": "2026-11-17"
+ },
+ "environment": {
+  "torch": "2.7.1+cu118",
+  "torchvision": "0.22.1+cu118",
+  "python": "3.10.20",
+  "cuda": "11.8",
+  "gpu": "NVIDIA RTX 5000 Ada Generation"
+ },
+ "evaluation": {
+  "episodic": "300 episodes; each draws 10 support and 15 query images per class from data_real_test (video B); accuracy in percent, with the 95% interval over episodes; the episodes follow --seed",
+  "10-shot": "reference set = the 10 support images of each class, nothing else",
+  "zero-shot": "reference set = the 360 rendered views of each class",
+  "renders+10-shot": "reference set = both",
+  "P1": "all 18 parts",
+  "P2": "the 8 screws",
+  "P3": "the 8 nuts",
+  "whole_test_set_zero_shot": "recognizer/predict.py --eval data_real_test: every test image once, rendered views as the reference set"
+ },
+ "heads": [
+  {
+   "file": "head_fgip18_seed0.pt",
+   "seed": 0,
+   "bytes": 2102983,
+   "sha256": "39abd7bb1f80623e11aeb633fae7233cbf8c1540cd86e56760bd3a6f6c174436",
+   "logit_scale": 10.4119,
+   "episodic": {
+    "P1": {
+     "10-shot": {
+      "acc": 91.76,
+      "ci95": 0.2
+     },
+     "zero-shot": {
+      "acc": 76.08,
+      "ci95": 0.23
+     },
+     "renders+10-shot": {
+      "acc": 90.86,
+      "ci95": 0.2
+     }
+    },
+    "P2": {
+     "10-shot": {
+      "acc": 90.74,
+      "ci95": 0.31
+     },
+     "zero-shot": {
+      "acc": 74.25,
+      "ci95": 0.3
+     },
+     "renders+10-shot": {
+      "acc": 90.14,
+      "ci95": 0.32
+     }
+    },
+    "P3": {
+     "10-shot": {
+      "acc": 90.82,
+      "ci95": 0.31
+     },
+     "zero-shot": {
+      "acc": 75.52,
+      "ci95": 0.4
+     },
+     "renders+10-shot": {
+      "acc": 90.79,
+      "ci95": 0.31
+     }
+    }
+   },
+   "whole_test_set_zero_shot": {
+    "images": 1927,
+    "accuracy": 75.97,
+    "mean_of_per_class_accuracies": 76.21,
+    "per_class": {
+     "gear_a": 100.0,
+     "gear_b": 100.0,
+     "nut_a": 64.4,
+     "nut_b": 86.7,
+     "nut_c": 64.8,
+     "nut_d": 81.8,
+     "nut_e": 90.3,
+     "nut_g": 62.5,
+     "nut_h": 78.1,
+     "nut_i": 74.3,
+     "screw_a": 84.9,
+     "screw_b": 7.3,
+     "screw_c": 95.2,
+     "screw_d": 54.1,
+     "screw_e": 90.8,
+     "screw_f": 92.7,
+     "screw_g": 67.0,
+     "screw_h": 77.0
+    }
+   }
+  },
+  {
+   "file": "head_fgip18_seed1.pt",
+   "seed": 1,
+   "bytes": 2102983,
+   "sha256": "6cfa504567f655b632dd0df4485de28fcbe71d2562e803cc8b0106506d9543f9",
+   "logit_scale": 10.3704,
+   "episodic": {
+    "P1": {
+     "10-shot": {
+      "acc": 91.93,
+      "ci95": 0.19
+     },
+     "zero-shot": {
+      "acc": 73.29,
+      "ci95": 0.23
+     },
+     "renders+10-shot": {
+      "acc": 91.25,
+      "ci95": 0.22
+     }
+    },
+    "P2": {
+     "10-shot": {
+      "acc": 91.92,
+      "ci95": 0.29
+     },
+     "zero-shot": {
+      "acc": 70.36,
+      "ci95": 0.31
+     },
+     "renders+10-shot": {
+      "acc": 90.74,
+      "ci95": 0.3
+     }
+    },
+    "P3": {
+     "10-shot": {
+      "acc": 91.16,
+      "ci95": 0.29
+     },
+     "zero-shot": {
+      "acc": 71.72,
+      "ci95": 0.46
+     },
+     "renders+10-shot": {
+      "acc": 90.67,
+      "ci95": 0.31
+     }
+    }
+   },
+   "whole_test_set_zero_shot": {
+    "images": 1927,
+    "accuracy": 72.86,
+    "mean_of_per_class_accuracies": 73.13,
+    "per_class": {
+     "gear_a": 100.0,
+     "gear_b": 100.0,
+     "nut_a": 53.8,
+     "nut_b": 88.6,
+     "nut_c": 63.8,
+     "nut_d": 75.8,
+     "nut_e": 86.4,
+     "nut_g": 57.7,
+     "nut_h": 71.4,
+     "nut_i": 77.1,
+     "screw_a": 87.7,
+     "screw_b": 7.3,
+     "screw_c": 100.0,
+     "screw_d": 33.9,
+     "screw_e": 89.1,
+     "screw_f": 91.9,
+     "screw_g": 53.0,
+     "screw_h": 78.7
+    }
+   }
+  },
+  {
+   "file": "head_fgip18_seed2.pt",
+   "seed": 2,
+   "bytes": 2102983,
+   "sha256": "0dacf03a022bd7790bad82aa0b3e98810143eed575348ecf1ed11bee0525da01",
+   "logit_scale": 10.3901,
+   "episodic": {
+    "P1": {
+     "10-shot": {
+      "acc": 92.45,
+      "ci95": 0.17
+     },
+     "zero-shot": {
+      "acc": 77.42,
+      "ci95": 0.24
+     },
+     "renders+10-shot": {
+      "acc": 92.14,
+      "ci95": 0.2
+     }
+    },
+    "P2": {
+     "10-shot": {
+      "acc": 91.99,
+      "ci95": 0.28
+     },
+     "zero-shot": {
+      "acc": 75.57,
+      "ci95": 0.31
+     },
+     "renders+10-shot": {
+      "acc": 91.84,
+      "ci95": 0.31
+     }
+    },
+    "P3": {
+     "10-shot": {
+      "acc": 91.34,
+      "ci95": 0.29
+     },
+     "zero-shot": {
+      "acc": 76.46,
+      "ci95": 0.41
+     },
+     "renders+10-shot": {
+      "acc": 91.11,
+      "ci95": 0.3
+     }
+    }
+   },
+   "whole_test_set_zero_shot": {
+    "images": 1927,
+    "accuracy": 77.11,
+    "mean_of_per_class_accuracies": 77.38,
+    "per_class": {
+     "gear_a": 100.0,
+     "gear_b": 100.0,
+     "nut_a": 66.3,
+     "nut_b": 86.7,
+     "nut_c": 65.7,
+     "nut_d": 81.8,
+     "nut_e": 86.4,
+     "nut_g": 61.5,
+     "nut_h": 76.2,
+     "nut_i": 83.8,
+     "screw_a": 87.7,
+     "screw_b": 7.3,
+     "screw_c": 98.1,
+     "screw_d": 70.6,
+     "screw_e": 89.9,
+     "screw_f": 96.7,
+     "screw_g": 60.9,
+     "screw_h": 73.0
+    }
+   }
+  }
+ ],
+ "mean_of_three_heads": {
+  "P1": {
+   "10-shot": 92.05,
+   "zero-shot": 75.6,
+   "renders+10-shot": 91.42
+  },
+  "P2": {
+   "10-shot": 91.55,
+   "zero-shot": 73.39,
+   "renders+10-shot": 90.91
+  },
+  "P3": {
+   "10-shot": 91.11,
+   "zero-shot": 74.57,
+   "renders+10-shot": 90.86
+  }
+ },
+ "paper_three_seed_mean": {
+  "P1": {
+   "10-shot": 91.6,
+   "zero-shot": 75.5
+  },
+  "P2": {
+   "10-shot": 91.0,
+   "zero-shot": 74.0
+  },
+  "P3": {
+   "10-shot": 90.7,
+   "zero-shot": 76.0
+  }
+ },
+ "reference_set": {
+  "file": "gallery_fgip18_renders.npz",
+  "bytes": 9211279,
+  "sha256": "c934b9221fe9271855463c4f8548eb99d45def012e0675b861db7142e7591911",
+  "arrays": {
+   "feats": [
+    "float16",
+    [
+     6480,
+     768
+    ]
+   ],
+   "labels": [
+    "int16",
+    [
+     6480
+    ]
+   ],
+   "classes": [
+    "<U7",
+    [
+     18
+    ]
+   ],
+   "views": [
+    "<U26",
+    [
+     6480
+    ]
+   ],
+   "backbone": [
+    "<U13",
+    []
+   ],
+   "display": [
+    "<U7",
+    [
+     18
+    ]
+   ]
+  },
+  "content": "DINOv2 features (float16) of the 6,480 images of data_3dgs_source, their class indices, class names, the paper's names of the classes, and the file name of each view"
+ }
+}
