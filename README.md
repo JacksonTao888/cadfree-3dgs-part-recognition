@@ -3,7 +3,7 @@
 Code for the paper *CAD-Free Fine-Grained Industrial Part Recognition via 3D Gaussian Splatting*,
 by Chenxi Tao, Hong-In Won and Seung-Kyum Choi.
 Georgia Institute of Technology, and the Korea Institute of Industrial Technology.
-Under revision at *Machine Vision and Applications* (Springer).
+*Machine Vision and Applications* 38, 16 (2026). https://doi.org/10.1007/s00138-026-01945-3
 
 **Reconstruct → render → recognize.** From one short turntable video per part, we fit a 3D Gaussian
 Splatting twin, render it from 360 viewpoints to manufacture a labelled training set that never
@@ -44,7 +44,8 @@ matter.
 > 10 shots and 6.7 points zero-shot with matched view counts, because fine thread relief is not
 > reproduced faithfully. In a hand-held phone capture under different lighting, surface, and
 > viewpoints the order reverses: the renders lead by 11.7 points zero-shot with matched views and by
-> 14 points on nuts, and labeled shots taken on the rig do not transfer.
+> 14 points on nuts, and labeled shots taken on the rig do not transfer. We also report the twin's
+> reconstruction fidelity, blind zones, and computational cost.
 
 ## Method
 
@@ -187,11 +188,14 @@ steps that were run ad hoc and whose drivers did not survive.
 
 ```bibtex
 @article{tao2026cadfree,
-  title   = {CAD-Free Fine-Grained Industrial Part Recognition via 3D Gaussian Splatting},
+  title   = {{CAD}-free fine-grained industrial part recognition via {3D} {G}aussian {S}platting},
   author  = {Tao, Chenxi and Won, Hong-In and Choi, Seung-Kyum},
   journal = {Machine Vision and Applications},
-  note    = {Under revision},
-  year    = {2026}
+  volume  = {38},
+  number  = {1},
+  pages   = {16},
+  year    = {2026},
+  doi     = {10.1007/s00138-026-01945-3}
 }
 ```
 
